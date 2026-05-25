@@ -9,5 +9,5 @@ export default function Index() {
   if (isSignedIn) return <Redirect href="/(roots)/(tabs)" />;
 
   // If the user is not signed in, redirect to the sign-in page
-  return <Redirect href="/sign-up" />;
+  return <Redirect href="/sign-in" />;
 }
