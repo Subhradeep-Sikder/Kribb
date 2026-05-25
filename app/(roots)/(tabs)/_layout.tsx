@@ -1,19 +1,27 @@
 import { Tabs } from "expo-router";
+import { useUserStore } from "@/store/userStore";
 import { Ionicons } from "@expo/vector-icons";
+import { Platform } from "react-native";
 
-export default function TabLayout() {
+export default function TabsLayout() {
+  const isAdmin = useUserStore((state) => state.isAdmin);
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#2563eb",
-        tabBarInactiveTintColor: "#6b7280",
+        tabBarActiveTintColor: "#0E4D92",
+        tabBarInactiveTintColor: "#9CA3AF",
         tabBarStyle: {
-          backgroundColor: "#ffffff",
+          backgroundColor: "#FFFFFF",
           borderTopWidth: 1,
-          borderTopColor: "#e5e7eb",
-          height: 70,
-          paddingBottom: 20,
-          paddingTop: 4,
+          borderTopColor: "#F3F4F6",
+          height: Platform.OS === "ios" ? 88 : 70,
+          paddingTop: 3,
+          paddingBottom: Platform.OS === "ios" ? 28 : 15,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "500",
         },
         headerShown: false,
       }}
@@ -31,6 +39,7 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="search"
         options={{
@@ -44,6 +53,22 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="create"
+        options={{
+          title: "Add Property",
+          href: isAdmin ? "/create" : null,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "add-circle" : "add-circle-outline"}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="saved"
         options={{
@@ -57,6 +82,7 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="profile"
         options={{
