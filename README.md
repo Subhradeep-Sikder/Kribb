@@ -1,50 +1,91 @@
-# Welcome to your Expo app 👋
+# 🏠 Kribb — Real Estate App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> A premium full-stack real estate mobile application built using **React Native**, **Expo**, **TypeScript**, and **NativeWind**. Based on the **JavaScript Mastery React Native 2026** course.
 
-## Get started
+---
 
-1. Install dependencies
+## 🛠️ Technology Stack
 
-   ```bash
-   npm install
-   ```
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Framework** | 📱 [Expo v54](https://docs.expo.dev/versions/v54.0.0/) | Universal React Native development |
+| **Routing** | 🗺️ [Expo Router](https://docs.expo.dev/router/introduction/) | Clean, file-based routing |
+| **Styling** | 🎨 [NativeWind v4](https://www.nativewind.dev/) | Tailwind CSS for native React Native apps |
+| **Authentication** | 🔑 [Clerk](https://clerk.com/) | Secure user signup, login, and sessions |
+| **Database** | ⚡ [Supabase](https://supabase.com/) | PostgreSQL backend, storage, and RLS |
+| **State** | 🧠 [Zustand](https://github.com/pmndrs/zustand) | Light-weight client state management |
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🚦 Current Project Status
 
-In the output, you'll find options to open the app in a
+We have completed the foundational architecture, authentication integration, and user-to-database synchronization.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```mermaid
+graph TD
+  User([App User]) -->|Authenticate| Clerk[Clerk Auth]
+  Clerk -->|JWT Token| Supabase[Supabase Client]
+  Clerk -->|Trigger Sync| UserSyncHook[useUserSync Hook]
+  UserSyncHook -->|Upsert User| Postgres[(PostgreSQL Users Table)]
+  UserSyncHook -->|Update Role| ZustandStore[Zustand Store]
+  ZustandStore -->|Show/Hide Tabs| TabsLayout[Tabs Layout]
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Module Status & Files
 
-## Learn more
+| Feature | Status | Core Files |
+| :--- | :---: | :--- |
+| **Auth Pages** | 🟢 Done | [sign-in.tsx](file:///D:/projects/building/test/app/(auth)/sign-in.tsx), [sign-up.tsx](file:///D:/projects/building/test/app/(auth)/sign-up.tsx) |
+| **Navigation Shell** | 🟢 Done | [_layout.tsx](file:///D:/projects/building/test/app/(roots)/(tabs)/_layout.tsx), [_layout.tsx](file:///D:/projects/building/test/app/(roots)/_layout.tsx) |
+| **Supabase Client** | 🟢 Done | [supabase.ts](file:///D:/projects/building/test/lib/supabase.ts) (Attaches Clerk JWT) |
+| **User Sync Hook** | 🟢 Done | [useUserSync.ts](file:///D:/projects/building/test/hooks/useUserSync.ts), [useSupabase.ts](file:///D:/projects/building/test/hooks/useSupabase.ts) |
+| **Role Management** | 🟢 Done | [userStore.ts](file:///D:/projects/building/test/store/userStore.ts) (Checks Admin) |
+| **Home Screen** | 🟡 Placeholder | [index.tsx](file:///D:/projects/building/test/app/(roots)/(tabs)/index.tsx) |
+| **Search & Saved** | 🟡 Placeholder | [search.tsx](file:///D:/projects/building/test/app/(roots)/(tabs)/search.tsx), [saved.tsx](file:///D:/projects/building/test/app/(roots)/(tabs)/saved.tsx) |
+| **Create Property** | 🟡 Placeholder | [create.tsx](file:///D:/projects/building/test/app/(roots)/(tabs)/create.tsx) (Admin Only) |
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🎯 Next Steps Checklist
 
-## Join the community
+### 📋 Phase 1: Database & Seed Data
+- [ ] **Create Tables in Supabase**: Setup `agents`, `properties`, `reviews`, and `favorites` tables.
+- [ ] **Configure RLS**: Enable Row-Level Security policies to protect data access.
+- [ ] **Database Seeding**: Insert mock data for properties and agents to preview the design.
 
-Join our community of developers creating universal apps.
+### 🎨 Phase 2: Rich UI Layouts
+- [ ] **Home Screen (Featured & Grid)**:
+  - [ ] Implement header, search bar, and category filters.
+  - [ ] Implement *Featured Properties* horizontal carousel card.
+  - [ ] Implement *Recent Properties* vertical grid cards.
+- [ ] **Property Detail Screen** (Create `app/properties/[id].tsx`):
+  - [ ] Design image carousel, location description, agent profile, reviews, and Map preview.
+- [ ] **Search & Filter Views**: Implement dynamic queries and search filtering.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 🔌 Phase 3: Interactive Features
+- [ ] **Favorites**: Toggle heart buttons on property cards to save/remove listings.
+- [ ] **Map Integration**: Setup `react-native-maps` for coordinate selection.
+- [ ] **Contact Agent**: Set up calling/SMS/WhatsApp deep linking actions.
+- [ ] **Admin Creator Flow**: Build forms in `create.tsx` for listings and image uploads.
+
+---
+
+## ⚡ Quick Start
+
+### 1. Installation
+```bash
+npm install
+```
+
+### 2. Environment Variables (`.env`)
+Create a local `.env` file (which is safely ignored by Git):
+```env
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+EXPO_PUBLIC_SUPABASE_URL=https://...
+EXPO_PUBLIC_SUPABASE_KEY=sb_...
+```
+
+### 3. Run Development Server
+```bash
+npx expo start
+```
